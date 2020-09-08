@@ -6,12 +6,21 @@ fetch("/api/transaction")
     return response.json();
   })
   .then(data => {
-    // save db data on global variable
-    transactions = data;
+    // open a transaction on your pending db
+    const transaction = db.transaction(["pending"], "readonly");
+    // access your pending object store
+    const objectStore = transaction.objectStore("pending");
+    // get all records from store and set to a variable
+    const getAll = objectStore.getAll();
 
-    populateTotal();
-    populateTable();
-    populateChart();
+    getAll.onsuccess = event => {
+      const indexedTransactions = event.target.result;
+      transactions = indexedTransactions.concat(data);
+
+      populateTotal();
+      populateTable();
+      populateChart();
+    };
   });
 
 function populateTotal() {
