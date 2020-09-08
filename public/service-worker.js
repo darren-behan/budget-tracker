@@ -11,7 +11,10 @@ const staticFilesToPreCache = [
   "/index.html",
   "/index.js",
   "/manifest.webmanifest",
-  "/style.css"
+  "/styles.css",
+  "https://cdn.jsdelivr.net/npm/chart.js@2.8.0",
+  "/db.js",
+  "https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
 ].concat(iconFiles);
 
 // install
@@ -47,7 +50,7 @@ self.addEventListener("activate", function(evt) {
 // fetch
 self.addEventListener("fetch", function(evt) {
   const {url} = evt.request;
-  if (url.includes("/api/")) {
+  if (url == "http://localhost:3000/api/transaction") {
     evt.respondWith(
       caches.open(DATA_CACHE_NAME).then(cache => {
         return fetch(evt.request)
